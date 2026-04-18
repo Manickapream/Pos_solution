@@ -1,0 +1,14 @@
+# 1. Navigate to backend
+cd c:\Users\Manicka pream\OneDrive\Desktop\POS\pos_backend
+
+# 2. Activate virtual environment
+venv\Scripts\activate
+
+# 3. Create the auth_admin migration
+python manage.py makemigrations api
+
+# 4. Apply migrations to create the auth_admin table
+python manage.py migrate
+
+# 5. Create your first admin (this saves to BOTH Django User + auth_admin table)
+python manage.py createadmin
