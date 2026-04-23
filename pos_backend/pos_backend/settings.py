@@ -5,7 +5,12 @@ Supports both LOCAL (MySQL) and RENDER (PostgreSQL) environments.
 
 from pathlib import Path
 import os
-import dj_database_url
+
+try:
+    import dj_database_url
+    HAS_DJ_DATABASE_URL = True
+except ImportError:
+    HAS_DJ_DATABASE_URL = False
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,7 +40,6 @@ INSTALLED_APPS = [
 # ──── MIDDLEWARE ────
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -44,6 +48,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Add WhiteNoise for production static files (only if installed)
+try:
+    import whitenoise  # noqa: F401
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+except ImportError:
+    pass
 
 ROOT_URLCONF = 'pos_backend.urls'
 
@@ -68,7 +79,7 @@ WSGI_APPLICATION = 'pos_backend.wsgi.application'
 # ──── DATABASE ────
 # If DATABASE_URL env var exists (Render), use PostgreSQL
 # Otherwise, use local MySQL Workbench
-if 'DATABASE_URL' in os.environ:
+if 'DATABASE_URL' in os.environ and HAS_DJ_DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
@@ -107,7 +118,13 @@ USE_TZ = True
 # ──── STATIC & MEDIA ────
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Use WhiteNoise for static files in production
+try:
+    import whitenoise  # noqa: F401
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+except ImportError:
+    pass
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
