@@ -77,14 +77,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'pos_backend.wsgi.application'
 
 # ──── DATABASE ────
-# If DATABASE_URL env var exists (Render), use PostgreSQL
-# Otherwise, use local MySQL Workbench
+# Render (PostgreSQL) → Local (MySQL Workbench)
 if 'DATABASE_URL' in os.environ and HAS_DJ_DATABASE_URL:
+    # Production - Render PostgreSQL
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
             conn_max_age=600,
         )
+    }
+elif os.environ.get('RENDER'):
+    # On Render but DATABASE_URL not set - use SQLite as fallback
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
 else:
     # Local Development - MySQL Workbench
