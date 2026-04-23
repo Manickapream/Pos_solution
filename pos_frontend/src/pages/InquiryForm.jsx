@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Send, ArrowLeft, User, Mail, Phone, MessageSquare, Zap } from 'lucide-react'
 import toast from 'react-hot-toast'
 import api from '../api/axios'
 import './InquiryForm.css'
 
 export default function InquiryForm() {
-  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const productName = searchParams.get('product_name') || ''
-  const price = searchParams.get('price') || ''
+  const productName = location.state?.product_name || ''
+  const price = location.state?.price || ''
 
   const [form, setForm] = useState({
     product_name: productName,

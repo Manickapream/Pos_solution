@@ -6,7 +6,7 @@ export default function ProductCard({ product }) {
   const navigate = useNavigate()
 
   const handleEnquiry = () => {
-    navigate(`/inquiry?product_name=${encodeURIComponent(product.name)}&price=${encodeURIComponent(product.price)}`)
+    navigate('/inquiry', { state: { product_name: product.name, price: product.price } })
   }
 
   return (
