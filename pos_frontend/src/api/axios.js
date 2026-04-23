@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+// In production (Render), use the full backend URL from env variable
+// In development, Vite proxy handles /api/ requests
 const api = axios.create({
-  baseURL: '/api/',
+  baseURL: import.meta.env.VITE_API_URL || '/api/',
   headers: { 'Content-Type': 'application/json' },
 })
 
