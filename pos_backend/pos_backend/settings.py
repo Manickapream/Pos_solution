@@ -153,6 +153,16 @@ if RENDER_FRONTEND_URL and RENDER_FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
 
 CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "origin",
+    "x-csrftoken",
+    "x-requested-with",
+    "x-user-role",
+]
+
 # ──── CSRF ────
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
