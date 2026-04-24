@@ -143,11 +143,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://pos-frontend-kjm1.onrender.com",
 ]
 
 # Add Render frontend URL dynamically
 RENDER_FRONTEND_URL = os.environ.get('FRONTEND_URL', '')
-if RENDER_FRONTEND_URL:
+if RENDER_FRONTEND_URL and RENDER_FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS.append(RENDER_FRONTEND_URL)
 
 CORS_ALLOW_CREDENTIALS = True
@@ -156,8 +157,9 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://pos-frontend-kjm1.onrender.com",
 ]
-if RENDER_FRONTEND_URL:
+if RENDER_FRONTEND_URL and RENDER_FRONTEND_URL not in CSRF_TRUSTED_ORIGINS:
     CSRF_TRUSTED_ORIGINS.append(RENDER_FRONTEND_URL)
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
